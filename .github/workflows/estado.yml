@@ -1,0 +1,58 @@
+name: Actualizar estado
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: estado
+  cancel-in-progress: false
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - id: app
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: terboxastudio2026
+          repositories: terboxa-studio,Encuavia
+          permission-contents: read
+          permission-metadata: read
+      - name: Generar estado.json
+        env:
+          APP_TOKEN: ${{ steps.app.outputs.token }}
+          PUBLIC_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, datetime
+          repos = [("terboxa-studio", "APP_TOKEN"), ("Encuavia", "APP_TOKEN"), ("encuavia-releases", "PUBLIC_TOKEN")]
+          def get(path, key):
+              req = urllib.request.Request("https://api.github.com" + path, headers={
+                  "Authorization": "Bearer " + os.environ[key],
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28"})
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  return json.load(r)
+          out = []
+          for name, key in repos:
+              r = get("/repos/terboxastudio2026/" + name, key)
+              rels = [x for x in get("/repos/terboxastudio2026/" + name + "/releases?per_page=5", key) if not x.get("draft")]
+              ver = None
+              if rels:
+                  ver = {"etiqueta": rels[0]["tag_name"], "fecha": rels[0].get("published_at")}
+              out.append({"nombre": r["name"], "descripcion": r.get("description"), "ultima_version": ver, "ultimo_cambio": r.get("pushed_at")})
+          data = {"generado": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "repos": out}
+          with open("estado.json", "w", encoding="utf-8") as f:
+              json.dump(data, f, ensure_ascii=False, indent=2)
+              f.write("\n")
+          PY
+      - name: Guardar cambios
+        run: |
+          git config user.name "estado-bot"
+          git config user.email "estado-bot@users.noreply.github.com"
+          git add estado.json
+          git diff --cached --quiet || git commit -m "Actualizar estado.json" && git push
