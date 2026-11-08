@@ -1,0 +1,26 @@
+{
+  "generado": "2026-11-08T07:43:09Z",
+  "repos": [
+    {
+      "nombre": "terboxa-studio",
+      "descripcion": "Sitio web y herramientas internas de Terboxa Studio, un espacio independiente de creación, experimentación e investigación tecnológica.",
+      "ultima_version": null,
+      "ultimo_cambio": "2026-08-17T20:08:03Z"
+    },
+    {
+      "nombre": "Encuavia",
+      "descripcion": "Cámara inteligente para Android con guía de encuadre por voz y sonidos. Desarrollada por Terboxa con un enfoque en accesibilidad y facilidad de uso.",
+      "ultima_version": null,
+      "ultimo_cambio": "2026-11-02T03:40:43Z"
+    },
+    {
+      "nombre": "encuavia-releases",
+      "descripcion": "Instaladores y novedades de Encuavia, la cámara accesible para Android. Solo archivos de instalación (APK); el código fuente es privado.",
+      "ultima_version": {
+        "etiqueta": "0.1.0",
+        "fecha": "2026-11-08T06:54:48Z"
+      },
+      "ultimo_cambio": "2026-11-08T06:54:47Z"
+    }
+  ]
+}
