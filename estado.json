@@ -1,11 +1,11 @@
 {
-  "generado": "2026-11-10T07:05:16Z",
+  "generado": "2026-11-10T08:05:18Z",
   "repos": [
     {
       "nombre": "terboxa-studio",
       "descripcion": "Sitio web y herramientas internas de Terboxa Studio, un espacio independiente de creación, experimentación e investigación tecnológica.",
       "ultima_version": null,
-      "ultimo_cambio": "2026-11-10T05:30:43Z"
+      "ultimo_cambio": "2026-11-10T07:41:56Z"
     },
     {
       "nombre": "Encuavia",
